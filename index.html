@@ -73,76 +73,76 @@
                 <div class="col-xs-12 col-sm-10 col-md-8 col-lg-7">
                     <div class="card">
                         <div class="box">
-                            <form>
+                            <form onsubmit="handleFiles(this.files)">
                                 <label>Directory</label><br/>
-                                <input type="file" id="directory" webkitdirectory directory onchange="handleFiles(this.files)" />
+                                <input type="file" id="directory" webkitdirectory directory />
                                 <fieldset>
                                       <legend>Emulators</legend>
                                       <div class="row">
                                           <div class="col-xs-6 col-sm-4">
                                               <div class="box">
-                                                  <input type="checkbox" name="NES"> NES
+                                                  <input type="checkbox" id="NES"> NES
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="SNES"> SNES
+                                                  <input type="checkbox" id="SNES"> SNES
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="N64"> N64
+                                                  <input type="checkbox" id="N64"> N64
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="GB"> GB
+                                                  <input type="checkbox" id="GB"> GB
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="GBC"> GBC
+                                                  <input type="checkbox" id="GBC"> GBC
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="GBA"> GBA
+                                                  <input type="checkbox" id="GBA"> GBA
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="DS"> DS
-                                              </div>
-                                          </div>
-                                          <div class="col-xs-6 col-sm-4">
-                                              <div class="box">
-                                                  <input type="checkbox" name="SG"> SG-1000
-                                              </div>
-                                              <div class="box">
-                                                  <input type="checkbox" name="32X"> 32X
-                                              </div>
-                                              <div class="box">
-                                                  <input type="checkbox" name="GEN"> Genesis
-                                              </div>
-                                              <div class="box">
-                                                  <input type="checkbox" name="MS"> Master System
-                                              </div>
-                                              <div class="box">
-                                                  <input type="checkbox" name="GG"> Game Gear
+                                                  <input type="checkbox" id="DS"> DS
                                               </div>
                                           </div>
                                           <div class="col-xs-6 col-sm-4">
                                               <div class="box">
-                                                  <input type="checkbox" name="AT26"> Atari 2600
+                                                  <input type="checkbox" id="SG"> SG-1000
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="LYNX"> Lynx
+                                                  <input type="checkbox" id="32X"> 32X
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="ZMAC"> Z-Machine
+                                                  <input type="checkbox" id="GEN"> Genesis
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="PC"> PC Machine
+                                                  <input type="checkbox" id="MS"> Master System
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="NGP"> NGP
+                                                  <input type="checkbox" id="GG"> Game Gear
+                                              </div>
+                                          </div>
+                                          <div class="col-xs-6 col-sm-4">
+                                              <div class="box">
+                                                  <input type="checkbox" id="AT26"> Atari 2600
                                               </div>
                                               <div class="box">
-                                                  <input type="checkbox" name="NGC"> NGC
+                                                  <input type="checkbox" id="LYNX"> Lynx
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="ZMAC"> Z-Machine
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="PC"> PC Machine
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="NGP"> NGP
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="NGC"> NGC
                                               </div>
                                           </div>
                                       </div>
                                  </fieldset>
-                                 <input type="checkbox" name="Extract"> Extract First<br/>
-                                 <button type="button" name="submit">Start</button>
+                                 <input type="checkbox" id="extractFirst"> Extract First<br/>
+                                 <button type="submit" name="submit" value="submit">Start</button>
                             </form>
                         </div>
                     </div>
@@ -158,6 +158,28 @@
     const fs = require("fs");
     const SevenZip = require('7zip-bin');
     const chld = require('child_process');
+
+    const extensions = [
+        "nes" = ["nes", "smc", "sfc", "fig", "swc", "mgd", "fds"],
+        "sg-1000" = ["sg"],
+        "snes" = ["smc", "sfc", "fig", "swc"],
+        "gb" = ["gb"],
+        "gbc" = ["gbc"],
+        "gba" = ["gba"],
+        "ds" = ["nds"],
+        "32x" = ["32x", "smd", "bin", "md"],
+        "genesis" = ["smd", "bin", "md", "iso", "gen"],
+        "n64" = ["z64", "n64", "v64"],
+        "mastersystem" = ["sms"],
+        "atari2600" = ["bin", "a26", "rom", "gz"],
+        "lynx" = ["lnx"],
+        "gamegear" = ["gg"],
+        "ngp" = ["ngp"],
+        "ngc" =["ngc"],
+        "pcengine" = ["pce", "cue"],
+        "z-machine" = ["dat", "z1", "z2", "z3", "z4", "z5", "z6", "z7", "z8"]
+    ];
+
 
     function beginExtraction(name,dest) {
         var exportPath = dest + '/' + name;
@@ -178,8 +200,15 @@
             fs.readdir(exportPath, (err, files) => {
                 try {
                     for (var j = 0, k; k = files[j]; j++) {
-                        if (path.extname(k) === ".7z" || path.extname(k) === ".zip") {
-                            beginExtraction(k, exportPath);
+                        if ((#extractFirst).checked) {
+                            if (path.extname(k) === ".7z" || path.extname(k) === ".zip") {
+                                beginExtraction(k, exportPath);
+                            }
+                        }
+                        if ((#NES).checked) {
+                            if (path.extname(k) === ".7z" || path.extname(k) === ".zip") {
+                                beginExtraction(k, exportPath);
+                            }
                         }
                     }
                 } catch (err) {
