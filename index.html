@@ -203,8 +203,7 @@
 
     function beginExtraction(dest,name) {
         var exportPath = dest + '/' + name;
-
-        var extract = chld.exec(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + dest + '/"',
+        chld.execSync(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + dest + '/"',
           function (error, stdout, stderr) {
             // console.log('stdout: ' + stdout);
             // console.log('stderr: ' + stderr);
@@ -212,43 +211,36 @@
               console.log('exec error: ' + error);
             }
         });
-
-        extract.on('exit', function() {
-          process.exit()
-        })
     }
 
-    function extractFirst(dir) {
-        var files = fs.readdirSync(dir);
-        for (var j = 0, k; k = files[j]; j++) {
-            if (path.extname(k) === ".7z" || path.extname(k) === ".zip") {
-                beginExtraction(dir, k);
+    function checkExtraction(fileList) {
+        var files = fs.readdirSync(fileList[0].path);
+        if (document.getElementById('extractFirst').checked) {
+            for (var i = 0, f; f = files[i]; i++) {
+                if (path.extname(f) === ".7z" || path.extname(f) === ".zip") {
+                    beginExtraction(fileList[0].path, f);
+                }
             }
         }
+        return fs.readdirSync(fileList[0].path);
     }
 
     function handleFiles(fileList) {
-        for (var i = 0, f; f = fileList[i]; i++) {
-            if (document.getElementById('extractFirst').checked) {
-                extractFirst(f.path);
-            }
-            var files = fs.readdirSync(f.path);
-            console.log(files);
-            try {
-                for (var j = 0, k; k = files[j]; j++) {
-                    for (var l = 0, m; m = emulators[l]; l++) {
-                        if (document.getElementById(m).checked) {
-                            for (var n = 0, o; o = extensions[l][n]; n++) {
-                                if (path.extname(k) === o) {
-                                    console.log('start compression of rom');
-                                }
+        var files = checkExtraction(fileList);
+        try {
+            for (var i = 0, f; f = files[i]; i++) {
+                for (var j = 0, k; k = emulators[j]; j++) {
+                    if (document.getElementById(k).checked) {
+                        for (var l = 0, m; m = extensions[j][l]; l++) {
+                            if (path.extname(f) === m) {
+                                console.log('start compression of rom');
                             }
                         }
                     }
                 }
-            } catch (err) {
-                console.log("Idk I guess something went wrong");
             }
+        } catch (err) {
+            console.log("Idk I guess something went wrong");
         }
     }
   </script>
