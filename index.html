@@ -73,7 +73,7 @@
                 <div class="col-xs-12 col-sm-10 col-md-8 col-lg-7">
                     <div class="card">
                         <div class="box">
-                            <form onsubmit="handleFiles(this.files)">
+                            <form>
                                 <label>Directory</label><br/>
                                 <input type="file" id="directory" webkitdirectory directory />
                                 <fieldset>
@@ -142,7 +142,7 @@
                                       </div>
                                  </fieldset>
                                  <input type="checkbox" id="extractFirst"> Extract First<br/>
-                                 <button type="submit" name="submit" value="submit">Start</button>
+                                 <button type="button" name="submit" value="submit" onclick="handleFiles(getElementById('directory').files)">Start</button>
                             </form>
                         </div>
                     </div>
@@ -159,26 +159,26 @@
     const SevenZip = require('7zip-bin');
     const chld = require('child_process');
 
-    const extensions = [
-        "nes" = ["nes", "smc", "sfc", "fig", "swc", "mgd", "fds"],
-        "sg-1000" = ["sg"],
-        "snes" = ["smc", "sfc", "fig", "swc"],
-        "gb" = ["gb"],
-        "gbc" = ["gbc"],
-        "gba" = ["gba"],
-        "ds" = ["nds"],
-        "32x" = ["32x", "smd", "bin", "md"],
-        "genesis" = ["smd", "bin", "md", "iso", "gen"],
-        "n64" = ["z64", "n64", "v64"],
-        "mastersystem" = ["sms"],
-        "atari2600" = ["bin", "a26", "rom", "gz"],
-        "lynx" = ["lnx"],
-        "gamegear" = ["gg"],
-        "ngp" = ["ngp"],
-        "ngc" =["ngc"],
-        "pcengine" = ["pce", "cue"],
-        "z-machine" = ["dat", "z1", "z2", "z3", "z4", "z5", "z6", "z7", "z8"]
-    ];
+    const extensions = {
+        nes: [".nes", ".smc", ".sfc", ".fig", ".swc", ".mgd", ".fds"],
+        sg1000: [".sg"],
+        snes: [".smc", ".sfc", ".fig", ".swc"],
+        gb: [".gb"],
+        gbc: [".gbc"],
+        gba: [".gba"],
+        ds: [".nds"],
+        thirty2x: [".32x", ".smd", ".bin", ".md"],
+        genesis: [".smd", ".bin", ".md", ".iso", ".gen"],
+        n64: [".z64", ".n64", ".v64"],
+        mastersystem: [".sms"],
+        atari2600: [".bin", ".a26", ".rom", ".gz"],
+        lynx: [".lnx"],
+        gamegear: [".gg"],
+        ngp: [".ngp"],
+        ngc: [".ngc"],
+        pcengine: [".pce", ".cue"],
+        zmachine: [".dat", ".z1", ".z2", ".z3", ".z4", ".z5", ".z6", ".z7", ".z8"]
+    };
 
 
     function beginExtraction(name,dest) {
@@ -187,7 +187,7 @@
         chld.exec(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + dest + '/"',
           function (error, stdout, stderr) {
             // console.log('stdout: ' + stdout);
-            console.log('stderr: ' + stderr);
+            // console.log('stderr: ' + stderr);
             if (error !== null) {
               console.log('exec error: ' + error);
             }
@@ -200,14 +200,136 @@
             fs.readdir(exportPath, (err, files) => {
                 try {
                     for (var j = 0, k; k = files[j]; j++) {
-                        if ((#extractFirst).checked) {
+                        if (document.getElementById('extractFirst').checked) {
                             if (path.extname(k) === ".7z" || path.extname(k) === ".zip") {
                                 beginExtraction(k, exportPath);
                             }
                         }
-                        if ((#NES).checked) {
-                            if (path.extname(k) === ".7z" || path.extname(k) === ".zip") {
-                                beginExtraction(k, exportPath);
+                        if (document.getElementById('NES').checked) {
+                            for (var l = 0, m; m = extensions.nes[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('SG').checked) {
+                            for (var l = 0, m; m = extensions[sg1000][l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('SNES').checked) {
+                            for (var l = 0, m; m = extensions.snes[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('GB').checked) {
+                            for (var l = 0, m; m = extensions.gb[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('GBC').checked) {
+                            for (var l = 0, m; m = extensions.gbc[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    // beginExtraction(k, exportPath);
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('GBA').checked) {
+                            for (var l = 0, m; m = extensions.gba[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('DS').checked) {
+                            for (var l = 0, m; m = extensions.nds[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('32X').checked) {
+                            for (var l = 0, m; m = extensions.thirty2x[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('GEN').checked) {
+                            for (var l = 0, m; m = extensions.genesis[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('N64').checked) {
+                            for (var l = 0, m; m = extensions.n64[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('MS').checked) {
+                            for (var l = 0, m; m = extensions.mastersystem[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('AT26').checked) {
+                            for (var l = 0, m; m = extensions.atari2600[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('LYNX').checked) {
+                            for (var l = 0, m; m = extensions.lynx[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('GG').checked) {
+                            for (var l = 0, m; m = extensions.gamegear[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('NGP').checked) {
+                            for (var l = 0, m; m = extensions.ngp[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('NGC').checked) {
+                            for (var l = 0, m; m = extensions.ngc[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('PC').checked) {
+                            for (var l = 0, m; m = extensions.pcengine[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
+                            }
+                        }
+                        if (document.getElementById('ZMAC').checked) {
+                            for (var l = 0, m; m = extensions.zmachine[l]; l++) {
+                                if (path.extname(k) === m) {
+                                    console.log('start compression of rom');
+                                }
                             }
                         }
                     }
