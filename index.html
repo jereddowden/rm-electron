@@ -2,18 +2,191 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>RetroManager</title>
+    <link href="https://necolas.github.io/normalize.css/7.0.0/normalize.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Strait" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Sintony" rel="stylesheet">
+    <style>
+    :root {
+        --primary-font: "Strait", sans-serif;
+        --secondary-font: "Sintony", sans-serif;
+        --font-size: 14px;
+        --bg-color: #f5f5f5;
+        --body-text-color: rgba(96,96,96,0.5);
+        --text-color: #3a3a3a;
+        --spacing: 0.66px;
+        --height: 1.2;
+        --padding: 4px;
+        --radius: 25px;
+        --btn-radius: 5px;
+        --text-shadow: 0.5px 0 0 #3a3a3a;
+        --box-shadow: 0 2px 4px rgba(50,50,93,.25);
+    }
+    * {
+        font-family: var(--secondary-font);
+        font-size: var(--font-size);
+        text-transform: uppercase;
+        letter-spacing: var(--spacing);
+        line-height: var(--height);
+        padding: var(--padding);
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--body-text-color);
+    }
+    h1 {
+        font-family: var(--primary-font);
+        color: var(--text-color);
+        text-transform: initial;
+        text-align: center;
+    }
+    .card {
+        background-color: #fff;
+        box-shadow: var(--box-shadow);
+        border-radius: var(--radius);
+    }
+    .card>* {
+        padding: 20px;
+        color: var(--text-color);
+        text-align: left;
+    }
+    form>* {
+        margin: 10px 0px;
+    }
+    fieldset, button {
+        border: 0px;
+        box-shadow: var(--box-shadow);
+        border-radius: var(--btn-radius);
+    }
+    label, legend, button {
+        font-weight: normal;
+        text-shadow: var(--text-shadow);
+    }
+    </style>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+
+    <div class="container">
+        <h1>RetroManager</h1>
+            <div class="row center-xs">
+                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-7">
+                    <div class="card">
+                        <div class="box">
+                            <form>
+                                <label>Directory</label><br/>
+                                <input type="file" id="directory" webkitdirectory directory onchange="handleFiles(this.files)" />
+                                <fieldset>
+                                      <legend>Emulators</legend>
+                                      <div class="row">
+                                          <div class="col-xs-6 col-sm-4">
+                                              <div class="box">
+                                                  <input type="checkbox" name="NES"> NES
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="SNES"> SNES
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="N64"> N64
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="GB"> GB
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="GBC"> GBC
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="GBA"> GBA
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="DS"> DS
+                                              </div>
+                                          </div>
+                                          <div class="col-xs-6 col-sm-4">
+                                              <div class="box">
+                                                  <input type="checkbox" name="SG"> SG-1000
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="32X"> 32X
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="GEN"> Genesis
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="MS"> Master System
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="GG"> Game Gear
+                                              </div>
+                                          </div>
+                                          <div class="col-xs-6 col-sm-4">
+                                              <div class="box">
+                                                  <input type="checkbox" name="AT26"> Atari 2600
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="LYNX"> Lynx
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="ZMAC"> Z-Machine
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="PC"> PC Machine
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="NGP"> NGP
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" name="NGC"> NGC
+                                              </div>
+                                          </div>
+                                      </div>
+                                 </fieldset>
+                                 <input type="checkbox" name="Extract"> Extract First<br/>
+                                 <button type="button" name="submit">Start</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
   </body>
 
   <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
+    require('./renderer.js');
+
+    const path = require("path");
+    const fs = require("fs");
+    const SevenZip = require('7zip-bin');
+    const chld = require('child_process');
+
+    function beginExtraction(name,dest) {
+        var exportPath = dest + '/' + name;
+
+        chld.exec(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + dest + '/"',
+          function (error, stdout, stderr) {
+            // console.log('stdout: ' + stdout);
+            console.log('stderr: ' + stderr);
+            if (error !== null) {
+              console.log('exec error: ' + error);
+            }
+        });
+    }
+
+    function handleFiles(fileList) {
+        for (var i = 0, f; f = fileList[i]; i++) {
+            var exportPath = f.path;
+            fs.readdir(exportPath, (err, files) => {
+                try {
+                    for (var j = 0, k; k = files[j]; j++) {
+                        if (path.extname(k) === ".7z" || path.extname(k) === ".zip") {
+                            beginExtraction(k, exportPath);
+                        }
+                    }
+                } catch (err) {
+                    console.log("Idk I guess something went wrong");
+                }
+            });
+        }
+    }
   </script>
 </html>
