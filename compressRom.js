@@ -1,8 +1,9 @@
 const path = require("path");
-const fs = require("fs");
+const readDirs = require('recursive-readdir-sync');
 const SevenZip = require('7zip-bin');
 const chld = require('child_process');
-const ProgressBar = require('progressbar.js')
+const ProgressBar = require('progressbar.js');
+const ua = require('./unpack-all');
 
 const emulators = [
     'NES',
@@ -46,20 +47,28 @@ const extensions = [
     [".dat", ".z1", ".z2", ".z3", ".z4", ".z5", ".z6", ".z7", ".z8"]
 ];
 
+
 var extracted;
 var line = new ProgressBar.Line('#progress');
 
+
 function extract(dest,name) {
     var exportPath = path.resolve(dest, name);
-    chld.execSync(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + path.resolve(dest, 'RetroManagerExtract') + '/"',
-      function (error, stdout, stderr) {
-        // console.log('stdout: ' + stdout);
-        // console.log('stderr: ' + stderr);
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-        line.animate((0.1), {duration: 100});
-    });
+    ua.unpack(exportPath, { targetDir: path.resolve(dest, 'RetroManagerExtract') },
+        function(err, files, text) {
+           if (err) return console.error(err);
+           if (files) console.log('files', files);
+           if (text) console.log('text', text);
+           line.animate((0.1), {duration: 100});
+        });
+    // chld.execSync(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + path.resolve(dest, 'RetroManagerExtract') + '/"',
+    //   function (error, stdout, stderr) {
+    //     // console.log('stdout: ' + stdout);
+    //     // console.log('stderr: ' + stderr);
+    //     if (error !== null) {
+    //       console.log('exec error: ' + error);
+    //     }
+    // });
 }
 function compress(dest,name) {
     var inputPath;
@@ -82,17 +91,19 @@ function compress(dest,name) {
 }
 
 function checkForExtraction(fileList) {
-    var files = fs.readdirSync(fileList[0].path);
+    var files = readDirs(fileList[0].path);
     if (document.getElementById('extractFirst').checked) {
         for (var i = 0, f; f = files[i]; i++) {
-            if (path.extname(f) === ".7z" || path.extname(f) === ".zip") {
+            if (path.extname(f) === ".7z" || path.extname(f) === ".zip" || path.extname(f) === ".rar") {
                 extract(fileList[0].path, f);
+                extracted = true;
             }
         }
-        extracted = true;
-        return fs.readdirSync(fileList[0].path+'/RetroManagerExtract');
+        if (extracted) {
+            return readDirs(fileList[0].path+'/RetroManagerExtract');
+        }
     }
-    return fs.readdirSync(fileList[0].path);
+    return readDirs(fileList[0].path);
 }
 
 function handleFiles(fileList) {
