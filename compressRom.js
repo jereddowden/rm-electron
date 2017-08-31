@@ -48,8 +48,8 @@ const extensions = [
 var extracted;
 
 function extract(dest,name) {
-    var exportPath = dest + '/' + name;
-    chld.execSync(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + dest + '/RetroManagerExtract/"',
+    var exportPath = path.resolve(dest, name);
+    chld.execSync(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + path.resolve(dest, 'RetroManagerExtract') + '/"',
       function (error, stdout, stderr) {
         // console.log('stdout: ' + stdout);
         // console.log('stderr: ' + stderr);
@@ -62,12 +62,12 @@ function compress(dest,name) {
     var inputPath;
     // console.log(extracted);
     if (extracted) {
-        inputPath = dest + '/RetroManagerExtract/' + name;
+        inputPath = path.resolve(path.resolve(dest, 'RetroManagerExtract'), name);
     } else {
-        inputPath = dest + '/' + name;
+        inputPath = path.resolve(dest, name);
     }
     // console.log(inputPath);
-    chld.execSync(SevenZip.path7za + ' a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ' + '"' + dest + '/RetroManagerCompress/' + path.parse(name).name + '.7z" "' + inputPath + '"',
+    chld.execSync(SevenZip.path7za + ' a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ' + '"' + path.resolve(path.resolve(dest, 'RetroManagerCompress'), path.parse(name).name) + '.7z" "' + inputPath + '"',
       function (error, stdout, stderr) {
         // console.log('stdout: ' + stdout);
         // console.log('stderr: ' + stderr);
