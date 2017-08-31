@@ -249,7 +249,7 @@
 
     function handleFiles(fileList) {
         var files = checkForExtraction(fileList);
-        // try {
+        try {
             for (var i = 0, f; f = files[i]; i++) {
                 for (var j = 0, k; k = emulators[j]; j++) {
                     if (document.getElementById(k).checked) {
@@ -262,9 +262,9 @@
                     }
                 }
             }
-        // } catch (err) {
-        //     console.log("Idk I guess something went wrong");
-        // }
+        } catch (err) {
+            console.log("Idk I guess something went wrong");
+        }
     }
   </script>
 </html>
