@@ -201,9 +201,29 @@
         [".dat", ".z1", ".z2", ".z3", ".z4", ".z5", ".z6", ".z7", ".z8"]
     ];
 
-    function beginExtraction(dest,name) {
+    var extracted;
+
+    function extract(dest,name) {
         var exportPath = dest + '/' + name;
-        chld.execSync(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + dest + '/"',
+        chld.execSync(SevenZip.path7za + ' x ' + '"' + exportPath + '" -o"' + dest + '/RetroManagerExtract/"',
+          function (error, stdout, stderr) {
+            // console.log('stdout: ' + stdout);
+            // console.log('stderr: ' + stderr);
+            if (error !== null) {
+              console.log('exec error: ' + error);
+            }
+        });
+    }
+    function compress(dest,name) {
+        var inputPath;
+        console.log(extracted);
+        if (extracted) {
+            inputPath = dest + '/RetroManagerExtract/' + name;
+        } else {
+            inputPath = dest + '/' + name;
+        }
+        console.log(inputPath);
+        chld.execSync(SevenZip.path7za + ' a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ' + '"' + dest + '/RetroManagerCompress/' + path.parse(name).name + '.7z" "' + inputPath + '"',
           function (error, stdout, stderr) {
             // console.log('stdout: ' + stdout);
             // console.log('stderr: ' + stderr);
@@ -213,35 +233,38 @@
         });
     }
 
-    function checkExtraction(fileList) {
+    function checkForExtraction(fileList) {
         var files = fs.readdirSync(fileList[0].path);
         if (document.getElementById('extractFirst').checked) {
             for (var i = 0, f; f = files[i]; i++) {
                 if (path.extname(f) === ".7z" || path.extname(f) === ".zip") {
-                    beginExtraction(fileList[0].path, f);
+                    extract(fileList[0].path, f);
                 }
             }
+            extracted = true;
+            return fs.readdirSync(fileList[0].path+'/RetroManagerExtract');
         }
         return fs.readdirSync(fileList[0].path);
     }
 
     function handleFiles(fileList) {
-        var files = checkExtraction(fileList);
-        try {
+        var files = checkForExtraction(fileList);
+        // try {
             for (var i = 0, f; f = files[i]; i++) {
                 for (var j = 0, k; k = emulators[j]; j++) {
                     if (document.getElementById(k).checked) {
                         for (var l = 0, m; m = extensions[j][l]; l++) {
                             if (path.extname(f) === m) {
                                 console.log('start compression of rom');
+                                compress(fileList[0].path, f);
                             }
                         }
                     }
                 }
             }
-        } catch (err) {
-            console.log("Idk I guess something went wrong");
-        }
+        // } catch (err) {
+        //     console.log("Idk I guess something went wrong");
+        // }
     }
   </script>
 </html>
