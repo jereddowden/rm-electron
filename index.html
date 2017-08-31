@@ -216,13 +216,13 @@
     }
     function compress(dest,name) {
         var inputPath;
-        console.log(extracted);
+        // console.log(extracted);
         if (extracted) {
             inputPath = dest + '/RetroManagerExtract/' + name;
         } else {
             inputPath = dest + '/' + name;
         }
-        console.log(inputPath);
+        // console.log(inputPath);
         chld.execSync(SevenZip.path7za + ' a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ' + '"' + dest + '/RetroManagerCompress/' + path.parse(name).name + '.7z" "' + inputPath + '"',
           function (error, stdout, stderr) {
             // console.log('stdout: ' + stdout);
@@ -255,7 +255,7 @@
                     if (document.getElementById(k).checked) {
                         for (var l = 0, m; m = extensions[j][l]; l++) {
                             if (path.extname(f) === m) {
-                                console.log('start compression of rom');
+                                // console.log('start compression of rom');
                                 compress(fileList[0].path, f);
                             }
                         }
