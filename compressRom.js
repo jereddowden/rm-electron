@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const SevenZip = require('7zip-bin');
 const chld = require('child_process');
+const ProgressBar = require('progressbar.js')
 
 const emulators = [
     'NES',
@@ -46,6 +47,7 @@ const extensions = [
 ];
 
 var extracted;
+var line = new ProgressBar.Line('#progress');
 
 function extract(dest,name) {
     var exportPath = path.resolve(dest, name);
@@ -56,6 +58,7 @@ function extract(dest,name) {
         if (error !== null) {
           console.log('exec error: ' + error);
         }
+        line.animate((0.1), {duration: 100});
     });
 }
 function compress(dest,name) {
@@ -74,6 +77,7 @@ function compress(dest,name) {
         if (error !== null) {
           console.log('exec error: ' + error);
         }
+        line.animate((0.1), {duration: 100});
     });
 }
 
@@ -93,7 +97,7 @@ function checkForExtraction(fileList) {
 
 function handleFiles(fileList) {
     var files = checkForExtraction(fileList);
-    try {
+    // try {
         for (var i = 0, f; f = files[i]; i++) {
             for (var j = 0, k; k = emulators[j]; j++) {
                 if (document.getElementById(k).checked) {
@@ -106,9 +110,9 @@ function handleFiles(fileList) {
                 }
             }
         }
-    } catch (err) {
-        console.log("Idk I guess something went wrong");
-    }
+    // } catch (err) {
+    //     console.log("Idk I guess something went wrong");
+    // }
 }
 
 document.getElementById('submit').onclick = function() {
