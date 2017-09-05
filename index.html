@@ -107,8 +107,159 @@
             <div class="row align-items-center">
                 <div class="col"></div>
                 <div class="col-7 align-self-center">
-                    <div class="card">
-                        <div class="box tab-pane" id="compress">
+                    <div class="card tab-content">
+                        <!-- Remove Duplicates -->
+                        <div class="box tab-pane fade" id="duplicate">
+                            <form>
+                                <label>Directory</label><br/>
+                                <input type="file" id="directory" webkitdirectory directory />
+                                <fieldset>
+                                      <legend>Emulators</legend>
+                                      <div class="row">
+                                          <div class="col">
+                                              <div class="box">
+                                                  <input type="checkbox" id="NES"> NES
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="SNES"> SNES
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="N64"> N64
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GB"> GB
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GBC"> GBC
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GBA"> GBA
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="DS"> DS
+                                              </div>
+                                          </div>
+                                          <div class="col">
+                                              <div class="box">
+                                                  <input type="checkbox" id="SG"> SG-1000
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="32X"> 32X
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GEN"> Genesis
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="MS"> Master System
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GG"> Game Gear
+                                              </div>
+                                          </div>
+                                          <div class="col">
+                                              <div class="box">
+                                                  <input type="checkbox" id="AT26"> Atari 2600
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="LYNX"> Lynx
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="ZMAC"> Z-Machine
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="PC"> PC Machine
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="NGP"> NGP
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="NGC"> NGC
+                                              </div>
+                                          </div>
+                                      </div>
+                                 </fieldset>
+                                 <input type="checkbox" id="extractFirst"> Extract First<br/>
+                                 <input class="btn-primary btn" type="button" name="submit" value="Start" id="submit"></input>
+                            </form>
+                            <div id="progress"></div>
+                        </div>
+                        <!-- Compress Roms -->
+                        <div class="box tab-pane fade show active" id="compress">
+                            <form>
+                                <label>Directory</label><br/>
+                                <input type="file" id="directory" webkitdirectory directory />
+                                <fieldset>
+                                      <legend>Emulators</legend>
+                                      <div class="row">
+                                          <div class="col">
+                                              <div class="box">
+                                                  <input type="checkbox" id="NES"> NES
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="SNES"> SNES
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="N64"> N64
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GB"> GB
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GBC"> GBC
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GBA"> GBA
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="DS"> DS
+                                              </div>
+                                          </div>
+                                          <div class="col">
+                                              <div class="box">
+                                                  <input type="checkbox" id="SG"> SG-1000
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="32X"> 32X
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GEN"> Genesis
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="MS"> Master System
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="GG"> Game Gear
+                                              </div>
+                                          </div>
+                                          <div class="col">
+                                              <div class="box">
+                                                  <input type="checkbox" id="AT26"> Atari 2600
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="LYNX"> Lynx
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="ZMAC"> Z-Machine
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="PC"> PC Machine
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="NGP"> NGP
+                                              </div>
+                                              <div class="box">
+                                                  <input type="checkbox" id="NGC"> NGC
+                                              </div>
+                                          </div>
+                                      </div>
+                                 </fieldset>
+                                 <input type="checkbox" id="extractFirst"> Extract First<br/>
+                                 <input class="btn-primary btn" type="button" name="submit" value="Start" id="submit"></input>
+                            </form>
+                            <div id="progress"></div>
+                        </div>
+                        <!-- Reorganize -->
+                        <div class="box tab-pane fade" id="organize">
                             <form>
                                 <label>Directory</label><br/>
                                 <input type="file" id="directory" webkitdirectory directory />
