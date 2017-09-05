@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <title>RetroManager</title>
-    <link href="https://necolas.github.io/normalize.css/7.0.0/normalize.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Strait" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Sintony" rel="stylesheet">
     <style>
@@ -58,14 +58,28 @@
     fieldset>div * {
         font-size: var(--font-size-smaller);
     }
-    fieldset, button {
+    fieldset {
         border: 0px;
         box-shadow: var(--box-shadow);
         border-radius: var(--btn-radius);
     }
-    label, legend, button {
+    label, legend {
         font-weight: normal;
         text-shadow: var(--text-shadow);
+    }
+    legend {
+        font-size: var(--font-size);
+    }
+    .nav-item, .nav-tabs, .container>.row, .container>.row>.col, .container>.row>.col-7 {
+        padding: 0px;
+    }
+    .nav-tabs {
+        border-bottom: 0px;
+        padding-left: 20px;
+    }
+    .nav-link {
+        border-top-left-radius: var(--btn-radius) !important;
+        border-top-right-radius: var(--btn-radius) !important;
     }
     </style>
   </head>
@@ -73,17 +87,35 @@
 
     <div class="container">
         <h1>RetroManager</h1>
-            <div class="row center-xs">
-                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-7">
+        <div class="row align-items-center">
+            <div class="col"></div>
+            <div class="col-7 align-self-center">
+                <ul class="nav nav-tabs">
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#duplicate">Remove Duplicates</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#compress">Compress Roms</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#organize">Reorganize</a>
+                  </li>
+                </ul>
+            </div>
+            <div class="col"></div>
+        </div>
+            <div class="row align-items-center">
+                <div class="col"></div>
+                <div class="col-7 align-self-center">
                     <div class="card">
-                        <div class="box">
+                        <div class="box tab-pane" id="compress">
                             <form>
                                 <label>Directory</label><br/>
                                 <input type="file" id="directory" webkitdirectory directory />
                                 <fieldset>
                                       <legend>Emulators</legend>
                                       <div class="row">
-                                          <div class="col-xs-6 col-sm-4">
+                                          <div class="col">
                                               <div class="box">
                                                   <input type="checkbox" id="NES"> NES
                                               </div>
@@ -106,7 +138,7 @@
                                                   <input type="checkbox" id="DS"> DS
                                               </div>
                                           </div>
-                                          <div class="col-xs-6 col-sm-4">
+                                          <div class="col">
                                               <div class="box">
                                                   <input type="checkbox" id="SG"> SG-1000
                                               </div>
@@ -123,7 +155,7 @@
                                                   <input type="checkbox" id="GG"> Game Gear
                                               </div>
                                           </div>
-                                          <div class="col-xs-6 col-sm-4">
+                                          <div class="col">
                                               <div class="box">
                                                   <input type="checkbox" id="AT26"> Atari 2600
                                               </div>
@@ -146,12 +178,13 @@
                                       </div>
                                  </fieldset>
                                  <input type="checkbox" id="extractFirst"> Extract First<br/>
-                                 <button type="button" name="submit" value="submit" id="submit">Start</button>
+                                 <input class="btn-primary btn" type="button" name="submit" value="Start" id="submit"></input>
                             </form>
                             <div id="progress"></div>
                         </div>
                     </div>
                 </div>
+                <div class="col"></div>
             </div>
         </div>
   </body>
